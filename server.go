@@ -46,7 +46,7 @@ func main(){
 	fmt.Println("resp sscard.APDUThaiIDCardSelect: ", selectRsp)
 
 	// CID
-	cid, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardCID)
+	cid, err := sscard.ThIDCardCID(card)
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
@@ -62,15 +62,15 @@ func main(){
 	fmt.Printf("fullnameEN: _%s_\n", string(fullnameEN))
 
 	// FULLNAME TH
-	fullnameTH, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardFullnameTh)
+	fullnameTH, err := sscard.ThIDCardFullnameTh(card, sscard.OptTis620ToUtf8())
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
 	}
 	fmt.Printf("fullnameTH: _%s_\n", string(fullnameTH))
-
+	
 	// DOB
-	birth, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardBirth)
+	birth, err := sscard.ThIDCardBirth(card)
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
@@ -78,7 +78,7 @@ func main(){
 	fmt.Printf("birth: _%s_\n", string(birth))
 
 	// GENDER
-	gender, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardGender)
+	gender, err := sscard.ThIDCardGender(card)
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
@@ -86,7 +86,7 @@ func main(){
 	fmt.Printf("gender: _%s_\n", string(gender))
 
 	// ISSUER
-	issuer, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardIssuer)
+	issuer, err := sscard.ThIDCardIssuer(card, sscard.OptTis620ToUtf8())
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
@@ -94,23 +94,23 @@ func main(){
 	fmt.Printf("issuer: _%s_\n", string(issuer))
 
 	// ISSUE DATE
-	issueDate, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardIssuedate)
+	issueDate, err := sscard.ThIDCardIssueDate(card)
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
 	}
-	fmt.Printf("issueDate: _%s_\n", string(issueDate))
-	
+	fmt.Printf("issue date: _%s_\n", string(issueDate))
+
 	// ISSUE DATE EXP
-	issueExp, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardExpiredate)
+	issueExp, err := sscard.ThIDCardExpireDate(card)
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
 	}
-	fmt.Printf("issueExp: _%s_\n", string(issueExp))
+	fmt.Printf("expire date: _%s_\n", string(issueExp))
 
 	// ADDRESS
-	address, err := sscard.APDUGetRsp(card, sscard.APDUThaiIDCardAddress)
+	address, err := sscard.ThIDCardAddress(card, sscard.OptTis620ToUtf8(), sscard.OptSharpToSpace())
 	if err != nil {
 		fmt.Println("Error APDUGetRsp: ", err)
 		return
@@ -122,7 +122,7 @@ func main(){
 	r := gin.Default()
 	r.GET("/smartcard", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H {
-			"message": "card success",
+			"message": "success",
 			"cid": string(cid),
 			"fullname_en": string(fullnameEN),
 			"fullname_th": string(fullnameTH),
@@ -131,7 +131,7 @@ func main(){
 			"issuer": string(issuer),
 			"issueDate": string(issueDate),
 			"issueExp": string(issueExp),
-			"addressTH": string(address),
+			"address_th": string(address),
 		})
 	})
 	r.Run()
