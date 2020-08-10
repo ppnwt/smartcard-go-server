@@ -6,6 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ebfe/scard"
 	"github.com/gogetth/sscard"
+	 b64 "encoding/base64"
 )
 
 func main(){
@@ -125,6 +126,9 @@ func main(){
 	}
 	fmt.Printf("Image binary: % 2X\n", cardPhotoJpg)
 
+	sEnc := b64.StdEncoding.EncodeToString([]byte(cardPhotoJpg))
+  fmt.Println(string(sEnc))
+
 	
 	n2, err := sscard.WriteBlockToFile(cardPhotoJpg, "./idcPhoto.jpg")
 	if err != nil {
@@ -148,7 +152,7 @@ func main(){
 			"issueDate": string(issueDate),
 			"issueExp": string(issueExp),
 			"address_th": string(address),
-			"photo": cardPhotoJpg,
+			"photo_b64": string(sEnc),
 		})
 	})
 	r.Run()
