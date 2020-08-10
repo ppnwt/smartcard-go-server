@@ -117,6 +117,22 @@ func main(){
 	}
 	fmt.Printf("address: _%s_\n", string(address))
 
+	// PHOTO
+	cardPhotoJpg, err := sscard.APDUGetBlockRsp(card, sscard.APDUThaiIDCardPhoto, sscard.APDUThaiIDCardPhotoRsp)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return
+	}
+	fmt.Printf("Image binary: % 2X\n", cardPhotoJpg)
+
+	
+	n2, err := sscard.WriteBlockToFile(cardPhotoJpg, "./idcPhoto.jpg")
+	if err != nil {
+		fmt.Println("Error WriteBlockToFile: ", err)
+		return
+	}
+	fmt.Printf("wrote %d bytes\n", n2)
+
 	// send response
 
 	r := gin.Default()
@@ -132,6 +148,7 @@ func main(){
 			"issueDate": string(issueDate),
 			"issueExp": string(issueExp),
 			"address_th": string(address),
+			"photo": cardPhotoJpg,
 		})
 	})
 	r.Run()
